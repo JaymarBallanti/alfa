@@ -1,0 +1,2 @@
+module RevisedContractAmountsHelper
+end

@@ -1,0 +1,48 @@
+<div class="box box-primary">
+<div class="box-body">
+<% if @project.manpower.present? %>
+<dl class="dl-horizontal">
+  <table class="table table-bordered table-striped table-hover">
+    <tbody>
+      <tr>
+        <td>
+          <dt>Project engineer:</dt>
+          <dd><%= @project.manpower.project_engineer %></dd>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <dt>Materials engineer:</dt>
+          <dd><%= @project.manpower.materials_engineer %></dd>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <dt>Project foreman:</dt>
+          <dd><%= @project.manpower.project_foreman %></dd> 
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</dl>
+<% else %>
+  <h3 class="text-muted">No Records Found!</h3>
+<% end %>
+</div>
+<div class="box-footer">
+  <div class="pull-right">
+    <% if @project.manpower.blank? %>
+      <%= link_to new_project_manpower_path(@project), class: 'btn btn-primary' do %>
+        <span class="glyphicon glyphicon-plus"></span>
+        New Manpower
+      <% end %>
+    <% else %>
+      <%= link_to edit_manpower_path(@project.manpower), class: 'btn btn-primary' do %>
+        <span class="glyphicon glyphicon-pencil"></span>
+        Edit
+      <% end %>
+    <% end %>
+  </div>
+</div>
+</div>
+

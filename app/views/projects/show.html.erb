@@ -1,0 +1,248 @@
+<div class="nav-tabs-custom">
+  <ul class="nav nav-tabs bg-blue">
+    <li class="active"><a href="#tab_1" data-toggle="tab">Projects</a></li>
+    <li><a href="#tab_2" data-toggle="tab">Manpower</a></li>
+    <li><a href="#tab_4" data-toggle="tab">Equipments</a></li>
+    <li><a href="#tab_3" data-toggle="tab">Revised Contract Amount</a></li>
+    <li><a href="#tab_5" data-toggle="tab">Time Extensions</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="tab_1">
+      <div class="box box-primary">
+        <div class="box-body">
+          <dl class="dl-horizontal">
+            <div class="row">
+              <div class="col-md-6">
+                <table class="table table-bordered table-hover table-striped">
+                  <tbody>
+                    <tr> 
+                      <td>
+                      <dt>Project ID:</dt>
+                      <dd><%= @project.project_id_number %></dd>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                      <dt>Project Name:</dt>
+                      <dd><%= @project.project_name %></dd>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                      <dt>Location:</dt>
+                      <dd><%= @project.location %></dd>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                      <dt>Implementing Office:</dt>
+                      <dd><%= @project.implementing_office %></dd>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                      <dt>Date of Award:</dt>
+                      <dd><%= @project.date_of_award %></dd>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-md-6">
+                <table class="table table-bordered table-hover table-striped">
+                  <tbody>
+                    <tr>
+                      <td>
+                      <dt>Date of Contract:</dt>
+                      <dd><%= @project.date_of_contract %></dd>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                      <dt>Date Started:</dt>
+                      <dd><%= @project.date_started %></dd>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                      <dt>Target Completion:</dt>
+                      <dd>
+                        <%= @project.target_completion %>
+                        <% if @project.time_extensions.present? %>
+                          <% @project.time_extensions.order('created_at DESC').limit(1).each do |date| %>
+                            (Revision: <%= date.date_to %>)
+                          <% end %>
+                        <% end %>
+                      </dd>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                      <dt>Project Duration:</dt>
+                      <dd>
+                        <%= @project.project_duration %>
+                        <% days = 0 %>
+                        <% duration = @project.project_duration.to_i %>
+                        <% if @project.time_extensions.present? %>
+                          <% @project.time_extensions.each do |time| %>
+                            <% days += time.number_of_days.to_i %>
+                          <% end %>
+                          (Revision: <%= duration + days %> CD)                         
+                        <% end %>
+                      </dd>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                      <dt>Contract Amount:</dt>
+                      <dd>
+                        <%= number_to_currency(@project.contract_amount, unit: 'Php ') %>
+                        <% if @project.revised_contract_amounts.present? %>
+                          <% @project.revised_contract_amounts.order('created_at DESC').limit(1).each do |amount| %>
+                            (Revision: <%= number_to_currency(amount.amount, unit: 'Php ') %>)
+                          <% end %>
+                        <% end %>
+                      </dd>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                      <dt>Major Item of Works:</dt>
+                      <dd>
+                        <%= @project.item_of_works %>
+                      </dd>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12" id="status">
+                <!-- validates date today and project duration before it computes  -->
+                  <% if (Date.today.to_date >= @project.target_completion.to_date) %>
+                   <div class="progress-group">
+                      <span class="progress-text">Project Progress</span>
+                      <span class="progress-number"><b>100%</b> / 100%</span>
+                      <div class="progress ">
+                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                          <span>100% Completed | Finished</span>
+                        </div>
+                      </div>
+                    </div>
+                   <% elsif (Date.today.to_date < @project.date_started.to_date)%>
+                    <div class="progress-group">
+                      <span class="progress-text">Project Progress</span>
+                      <span class="progress-number"><b>0%</b> / 100%</span>
+                      <div class="progress active">
+                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                          <span>0% Completed | Project Not Yet Started</span>
+                        </div>
+                      </div>
+                    </div>
+                  <% else %>
+                    <% now1 = ((@project.target_completion.to_date - Date.today.to_date).to_i) %><br>
+                    <% progress = (((duration.to_f - now1.to_f)/duration)*100).ceil %>
+                    <div class="progress-group">
+                      <span class="progress-text">Project Progress</span>
+                      <span class="progress-number"><b><%= progress %>%</b> / 100%</span>
+                      <% if (progress <= 0) %>
+                          <div class="progress active">
+                            <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: <%= progress %>%">
+                            </div> 
+                            <center><span class="text-blue"><%= progress %>% Completed | <%= (now1) %> Day/s Remaining</span></center>
+                          </div>
+                      <% else %>
+                          <div class="progress active">
+                            <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: <%= progress %>%">
+                              <span><%= progress %>% Completed | <%= (now1) %> Day/s Remaining</span>
+                            </div>
+                          </div>
+                      <% end %>
+                    </div>
+                  <% end %>
+                <!-- end of validates -->
+                <!-- start time extensions -->
+                <% if @project.time_extensions.present? %>
+                  <% @project.time_extensions.order('created_at DESC').limit(2).each do |time| %>
+                    <% days = time.number_of_days.to_i %>
+                    <% now1 = ((time.date_to.to_date - time.date_from.to_date).to_i) %>
+                    <% if ((Date.today.to_date >= time.date_from.to_date) && (Date.today.to_date <= time.date_to.to_date)) %>
+                      <% now = ((time.date_to.to_date - Date.today.to_date).to_i) %>
+                      <% progress = (((now1.to_f - now)/now1)*100).ceil %>
+                      <div class="progress-group">
+                        <span class="progress-text">Time Extension Progress: <%= time.date_from.to_date.to_formatted_s :long%> to <%= time.date_to.to_date.to_formatted_s :long%> (<%= time.number_of_days %>)</span>
+                        <span class="progress-number"><b><%= progress %>%</b> / 100%</span>
+                        <% if (progress <= 0) %>
+                          <div class="progress active">
+                            <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: <%= progress %>%">
+                            </div> 
+                            <center><span class="text-blue"><%= progress %>% Completed | <%= (now) %> Day/s Remaining</span></center>
+                          </div>
+                        <% else %>
+                          <div class="progress active">
+                            <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: <%= progress %>%">
+                              <span><%= progress %>% Completed | <%= (now) %> Day/s Remaining</span>
+                            </div>
+                          </div>
+                        <% end %>
+                      </div>
+                    <% elsif (Date.today.to_date >= time.date_to.to_date)%>
+                      <div class="progress-group">
+                        <span class="progress-text">Time Extension Progress: <%= time.date_from.to_date.to_formatted_s :long%> to <%= time.date_to.to_date.to_formatted_s :long%> (<%= time.number_of_days %>) </span>
+                        <span class="progress-number"><b>100%</b> / 100%</span>
+                        <div class="progress">
+                          <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            <span >100% Completed | Finished</span>
+                          </div>
+                        </div>
+                      </div>
+                    <% else %>
+                      <div class="progress-group">
+                        <span class="progress-text">Time Extension Progress: <%= time.date_from.to_date.to_formatted_s :long%> to <%= time.date_to.to_date.to_formatted_s :long%> (<%= time.number_of_days %>)</span>
+                        <span class="progress-number"><b>0%</b> / 100%</span>
+                        <div class="progress active">
+                          <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            <span class="text-blue">0% Completed | Project Not Yet Started</span>
+                          </div>
+                        </div>
+                      </div>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <!-- end of time extensions -->
+              </div>
+            </div>
+          </dl>
+        </div>
+        <div class="box-footer">
+          <div class="pull-left">
+            <%= link_to projects_path, class: 'btn btn-default' do %>
+              <span class="glyphicon glyphicon-chevron-left"></span>
+              Back
+            <% end %>
+          </div>
+          <div class="pull-right">
+            <%= link_to edit_project_path(@project), class: 'btn btn-primary' do %>
+              <span class="glyphicon glyphicon-pencil"></span>
+              Edit
+            <% end %>
+          </div>
+        </div>
+      </div>
+      
+    </div><!-- /.tab-pane -->
+    <div class="tab-pane" id="tab_2">
+      <%= render "/manpowers/show" %>
+    </div><!-- /.tab-pane -->
+    <div class="tab-pane" id="tab_4">
+      <%= render "/equipment/index" %>
+    </div><!-- /.tab-pane -->
+    <div class="tab-pane" id="tab_3">
+      <%= render "/revised_contract_amounts/index" %>
+    </div><!-- /.tab-pane -->
+    <div class="tab-pane" id="tab_5">
+      <%= render "/time_extensions/index" %>
+    </div><!-- /.tab-pane -->
+  </div><!-- /.tab-content -->
+</div>

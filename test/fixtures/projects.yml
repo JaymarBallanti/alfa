@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  project_id_number: 1
+  project_name: MyString
+  location: MyString
+  implementing_office: MyString
+  date_of_award: 2015-07-24
+  date_of_contract: 2015-07-24
+  date_started: 2015-07-24
+  target_comletion: 2015-07-24
+  project_duaration: MyString
+  contract_amount: 9.99
+
+two:
+  project_id_number: 1
+  project_name: MyString
+  location: MyString
+  implementing_office: MyString
+  date_of_award: 2015-07-24
+  date_of_contract: 2015-07-24
+  date_started: 2015-07-24
+  target_comletion: 2015-07-24
+  project_duaration: MyString
+  contract_amount: 9.99

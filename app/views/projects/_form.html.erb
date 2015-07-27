@@ -1,0 +1,49 @@
+<%= simple_form_for(@project) do |f| %>
+  <%= f.error_notification %>
+<div class="box box-primary">
+  <div class="box-header with-border">
+    <div class="box-title">
+      <% if @project.new_record? %>
+        New Project
+      <% else %>
+        Update Project Info
+      <% end %>
+    </div>
+  </div>
+  <div class="box-body">
+    <div class="col-md-6">
+      <%= f.input :project_id_number, label: 'Project ID:' %>
+      <%= f.input :project_name, label: 'Project Name:' %>
+      <%= f.input :location, label: 'Project Location:' %>
+      <%= f.input :implementing_office, label: 'Implementing Office:' %>
+      <%= f.input :date_of_award, label: 'Date of Award:', as: :string, input_html: { class: "datepicker" } %>
+    </div>
+    <div class="col-md-6">
+      <%= f.input :date_of_contract, label: 'Date of Contract:', as: :string, input_html: { class: "datepicker"} %>
+      <%= f.input :date_started, label: 'Date Started:', as: :string, input_html: { id:'start', class: "datepicker"}  %>
+      <%= f.input :target_completion, label: 'Target Completion:', as: :string, input_html: {  id:'end', onchange: 'diffDays()', class: "datepicker"}  %>
+      <%= f.input :project_duration, label: 'Project Location:', input_html: {id:'duration'} %>
+      <%= f.input :contract_amount, label: 'Contract Amount:' %>
+      <%= f.input :item_of_works, collection: Project.item_of_works, label: 'Major Item of Works:' %>
+    </div>
+  </div>
+  <div class="box-footer">
+    <div class="pull-left">
+      <%= link_to :back, class: 'btn btn-default' do %>
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        Back
+      <% end %>
+    </div>
+    <div class="pull-right">
+      <% if @project.new_record? %>
+        <%= f.button :button, class: 'btn btn-success btn-sm' do %>
+          <i class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></i><span> Save</span>
+        <% end %>
+      <% else %>
+        <%= f.button :button, class: 'btn btn-primary btn-sm' do %>
+          <i class="glyphicon glyphicon-edit" aria-hidden="true"></i><span> Update</span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

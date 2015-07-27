@@ -1,0 +1,39 @@
+<%= simple_form_for [@project, @equipment] do |f| %>
+  <%= f.error_notification %>
+<div class="box box-primary">
+  <div class="box-header">
+    <div class="box-title">
+      Equipments
+    </div>
+  </div>
+  <div class="box-body">
+    <div class="col-md-6">
+      <%= f.input :equipment_name %>
+      <%= f.input :equipment_type %>
+    </div>
+    <div class="col-md-6">
+      <%= f.input :plate_number %>
+      <%= f.input :quantity, value: '1', min: '1' %>
+    </div>
+  </div>
+  <div class="box-footer">
+    <div class="pull-left">
+      <%= link_to :back, class: 'btn btn-default' do %>
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        Back
+      <% end %>
+    </div>
+    <div class="pull-right">
+      <% if @equipment.new_record? %>
+        <%= f.button :button, class: 'btn btn-block btn-success btn-sm' do %>
+          <i class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></i><span> Save</span>
+        <% end %>
+      <% else %>
+        <%= f.button :button, class: 'btn btn-block btn-primary btn-sm' do %>
+          <i class="glyphicon glyphicon-edit" aria-hidden="true"></i><span> Update</span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<% end %>
