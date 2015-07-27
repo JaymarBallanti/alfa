@@ -29,6 +29,7 @@ gem 'bootstrap-modal-rails'
 gem 'will_paginate'
 gem 'simple_form'
 gem "breadcrumbs_on_rails"
+gem 'google-api-client'
 
 
 # See https://github.com/rails/execjs#readme for more supported runtimes

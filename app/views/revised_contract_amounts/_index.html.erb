@@ -9,7 +9,7 @@
             <th style="text-align:center">Amount</th>
             <th style="text-align:center">Date Created</th>
             <th style="text-align:center">Date Updated</th>
-            <th style="text-align:center"><i class="fa fa-gear"></th>
+            <th style="text-align:center"><i class="glyphicon glyphicon-cog"></th>
           </tr>
         </thead>
 
@@ -20,11 +20,11 @@
             <td style="text-align:center"><%= revised_contract_amount.updated_at %></td>  
             <td style="text-align:center">
               <%= link_to edit_revised_contract_amount_path(revised_contract_amount) do %>
-                <i class="fa fa-edit"></i>
+                <i class="glyphicon glyphicon-edit"></i>
               <% end %>
               <span>&nbsp&nbsp&nbsp|&nbsp&nbsp&nbsp</span>
               <%= link_to revised_contract_amount, method: :delete, data: { confirm: 'Are you sure?' } do %>
-                <i class="fa fa-trash"></i>
+                <i class="glyphicon glyphicon-trash"></i>
               <% end %>
             </td>
           <% end %>
